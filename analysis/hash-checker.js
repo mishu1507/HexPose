@@ -1,13 +1,4 @@
-/**
- * HexPose — HashChecker
- * VirusTotal v3 REST API hash lookup (SHA-256).
- * Only the hash leaves the machine — file bytes are never uploaded.
- *
- * Usage (ES module, inside service worker):
- *   import { HashChecker } from './hash-checker.js';
- *   const checker = new HashChecker(apiKey);
- *   const result = await checker.lookup(sha256);
- */
+
 
 const VT_BASE = 'https://www.virustotal.com/api/v3';
 
