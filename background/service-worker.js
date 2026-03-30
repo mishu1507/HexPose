@@ -1,13 +1,3 @@
-/**
- * HexPose — Background Service Worker (MV3)
- * 
- * Responsibilities:
- * - Intercept all downloads via chrome.downloads.onCreated / onChanged
- * - Handle messages from popup and content script
- * - Run FileAnalyzer + HashChecker
- * - Store scan history in chrome.storage.local
- * - Fire notifications for malicious verdicts
- */
 
 import { FileAnalyzer, computeHashes } from '../analysis/file-analyzer.js';
 import { HashChecker } from '../analysis/hash-checker.js';
