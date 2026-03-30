@@ -1,12 +1,3 @@
-/**
- * HexPose — Universal Content Script
- * Injected on every page via <all_urls> match pattern.
- *
- * - Scans all <a href> pointing to file extensions, injects scan button
- * - MutationObserver for dynamically added links (SPAs, Gmail, Notion, Slack)
- * - Intercepts <input type="file"> change events
- * - Global drop event listener
- */
 
 (function () {
   'use strict';
