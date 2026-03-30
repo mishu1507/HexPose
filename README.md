@@ -1,6 +1,6 @@
-# HexPose — Universal File Malware Scanner
+# HexPose - Universal File Malware Scanner
 
-A Chrome extension that intercepts files across every website and scans them for malware, exploits, and suspicious payloads **before you open them**. All analysis runs locally in your browser — file bytes never leave your machine.
+A Chrome extension that intercepts files across every website and scans them for malware, exploits, and suspicious payloads **before you open them**. All analysis runs locally in your browser - file bytes never leave your machine.
 
 ![HexPose](icons/icon128.png)
 
@@ -12,7 +12,7 @@ A Chrome extension that intercepts files across every website and scans them for
 2. Enable **Developer mode** (toggle in top-right)
 3. Click **Load unpacked**
 4. Select the `HexPose` folder
-5. The ⬡ icon appears in your toolbar — you're ready
+5. The ⬡ icon appears in your toolbar - you're ready
 
 ### 2. Get a Free VirusTotal API Key (Optional)
 
@@ -20,9 +20,9 @@ A Chrome extension that intercepts files across every website and scans them for
 2. Go to your profile → API Key
 3. Copy the key
 4. Open HexPose popup → **Settings** tab → paste key → **Save**
-5. Free tier: 500 lookups/day, 4/min — enough for personal use
+5. Free tier: 500 lookups/day, 4/min - enough for personal use
 
-> **Privacy**: Only the SHA-256 hash is sent to VirusTotal — never the file itself.
+> **Privacy**: Only the SHA-256 hash is sent to VirusTotal - never the file itself.
 
 ## What It Does
 
@@ -74,7 +74,7 @@ The `FileAnalyzer` runs entirely in the browser with zero network calls:
 - Dangerous extension blocklist (40+ extensions)
 
 **Entropy analysis**
-- Shannon entropy over all bytes — flags >7.5 as potentially packed/encrypted
+- Shannon entropy over all bytes - flags >7.5 as potentially packed/encrypted
 
 **PDF checks** (13 patterns)
 - `/JavaScript`, `/JS`, `/OpenAction`, `/AA`, `/Launch`, `/SubmitForm`, `/ImportData`
