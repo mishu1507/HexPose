@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HexPose — File Scanner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">Hex<span class="logo-accent">Pose</span></span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" id="tab-scan" role="tab" aria-selected="true" aria-controls="panel-scan">Scan</button>
+      <button class="tab" id="tab-history" role="tab" aria-selected="false" aria-controls="panel-history">History</button>
+      <button class="tab" id="tab-settings" role="tab" aria-selected="false" aria-controls="panel-settings">Settings</button>
+    </nav>
+  </header>
+
+  <!-- ── Scan Panel ─────────────────────────────────────────────────────────── -->
+  <div class="panel active" id="panel-scan" role="tabpanel" aria-labelledby="tab-scan">
+
+    <!-- Drop Zone -->
+    <div class="drop-zone" id="drop-zone" tabindex="0" role="button" aria-label="Drop a file here or click to browse">
+      <div class="drop-icon">📁</div>
+      <div class="drop-title">Drop file to scan</div>
+      <div class="drop-subtitle">or <span class="drop-browse-link" id="browse-link">click to browse</span></div>
+      <input type="file" id="file-input" class="hidden-input" aria-hidden="true" />
+    </div>
+
+    <!-- Scanning State -->
+    <div class="scan-progress hidden" id="scan-progress">
+      <div class="spinner-ring">
+        <svg viewBox="0 0 36 36" class="circular-progress" aria-hidden="true">
+          <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+          <path class="circle-fill" stroke-dasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+        </svg>
+      </div>
+      <div class="scan-progress-text">Analyzing file…</div>
+      <div class="scan-progress-sub" id="scan-progress-sub">Running static analysis</div>
+    </div>
+
+    <!-- Result Card -->
+    <div class="result-card hidden" id="result-card">
+      <!-- Score gauge -->
+      <div class="score-section">
+        <div class="score-gauge" id="score-gauge" aria-label="Risk score">
+          <svg viewBox="0 0 120 70" class="gauge-svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="gauge-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#34d399"/>
+                <stop offset="40%" stop-color="#fbbf24"/>
+                <stop offset="70%" stop-color="#fb923c"/>
+                <stop offset="100%" stop-color="#f87171"/>
+              </linearGradient>
+            </defs>
+            <path class="gauge-track" d="M15,65 A48,48 0 0,1 105,65"/>
+            <path class="gauge-fill" id="gauge-fill" d="M15,65 A48,48 0 0,1 105,65" stroke-dasharray="0 150"/>
+            <text class="gauge-score" id="gauge-score" x="60" y="60">0</text>
+            <text class="gauge-label" x="60" y="72">risk score</text>
+          </svg>
+        </div>
+        <div class="verdict-badge" id="verdict-badge">—</div>
+      </div>
+
+      <!-- File meta -->
+      <div class="file-meta" id="file-meta"></div>
+
+      <!-- Findings list -->
+      <div class="findings-section" id="findings-section">
+        <div class="findings-header">
+          <span>Findings</span>
+          <span class="findings-count" id="findings-count">0</span>
+        </div>
+        <ul class="findings-list" id="findings-list"></ul>
+      </div>
+
+      <!-- Hashes -->
+      <div class="hashes-section" id="hashes-section">
+        <div class="hash-row">
+          <span class="hash-label">SHA-256</span>
+          <span class="hash-value" id="hash-sha256">—</span>
+        </div>
+        <div class="hash-row">
+          <span class="hash-label">SHA-1</span>
+          <span class="hash-value" id="hash-sha1">—</span>
+        </div>
+        <div class="hash-row">
+          <span class="hash-label">MD5</span>
+          <span class="hash-value" id="hash-md5">—</span>
+        </div>
+      </div>
+
+      <!-- VirusTotal -->
+      <div class="vt-section hidden" id="vt-section">
+        <div class="vt-header">
+          <span class="vt-logo">VT</span>
+          <span class="vt-title">VirusTotal</span>
+          <span class="vt-status" id="vt-status">Checking…</span>
+        </div>
+        <div class="vt-bar-wrap" id="vt-bar-wrap" hidden>
+          <div class="vt-bar" id="vt-bar" style="width:0%"></div>
+        </div>
+        <div class="vt-link-wrap hidden" id="vt-link-wrap">
+          <a class="vt-link" id="vt-link" href="#" target="_blank" rel="noopener">View full report ↗</a>
+        </div>
+      </div>
+
+      <!-- Rescan -->
+      <button class="btn-secondary" id="btn-rescan">Scan another file</button>
+    </div>
+  </div>
+
+  <!-- ── History Panel ───────────────────────────────────────────────────────── -->
+  <div class="panel hidden" id="panel-history" role="tabpanel" aria-labelledby="tab-history">
+    <div class="history-toolbar">
+      <span class="section-label">Last 20 scans</span>
+      <button class="btn-ghost" id="btn-clear-history">Clear</button>
+    </div>
+    <ul class="history-list" id="history-list">
+      <li class="history-empty" id="history-empty">No scans yet</li>
+    </ul>
+  </div>
+
+  <!-- ── Settings Panel ─────────────────────────────────────────────────────── -->
+  <div class="panel hidden" id="panel-settings" role="tabpanel" aria-labelledby="tab-settings">
+    <div class="settings-group">
+      <h3 class="settings-group-title">VirusTotal</h3>
+      <label class="settings-label" for="vt-api-key">API Key</label>
+      <div class="input-row">
+        <input type="password" id="vt-api-key" class="text-input" placeholder="Paste your free VT API key…" autocomplete="off" />
+        <button class="btn-toggle-vis" id="btn-toggle-key" aria-label="Show/hide API key">👁</button>
+      </div>
+      <p class="settings-hint">Free key: 500 lookups/day, 4/min. <a href="https://www.virustotal.com/gui/join-us" target="_blank" rel="noopener" class="link">Get one →</a></p>
+    </div>
+
+    <div class="settings-group">
+      <h3 class="settings-group-title">Scanning</h3>
+
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Auto-scan downloads</div>
+          <div class="toggle-desc">Scan files when they finish downloading</div>
+        </div>
+        <label class="toggle-switch" aria-label="Auto-scan downloads">
+          <input type="checkbox" id="toggle-auto-scan" checked />
+          <span class="toggle-knob"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Block malicious downloads</div>
+          <div class="toggle-desc">Cancel downloads that score ≥ 70</div>
+        </div>
+        <label class="toggle-switch" aria-label="Block malicious downloads">
+          <input type="checkbox" id="toggle-block-malicious" />
+          <span class="toggle-knob"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Desktop notifications</div>
+          <div class="toggle-desc">Alert when a malicious file is detected</div>
+        </div>
+        <label class="toggle-switch" aria-label="Desktop notifications">
+          <input type="checkbox" id="toggle-notifications" checked />
+          <span class="toggle-knob"></span>
+        </label>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-save-settings">Save Settings</button>
+    <div class="settings-saved hidden" id="settings-saved">✓ Saved</div>
+
+    <div class="settings-group settings-about">
+      <h3 class="settings-group-title">About</h3>
+      <p class="settings-hint">HexPose v1.0.0 — Universal File Malware Scanner<br>File bytes never leave your machine. Only SHA-256 hashes are sent to VirusTotal.</p>
+    </div>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>

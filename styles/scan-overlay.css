@@ -1,0 +1,178 @@
+/**
+ * HexPose — scan-overlay.css
+ * Injected on all pages. All classes prefixed with "hexpose-" to avoid conflicts.
+ */
+
+/* ─── Scan Button ─────────────────────────────────────────────────────────── */
+
+.hexpose-scan-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 13px;
+  line-height: 1;
+  background: rgba(30, 30, 50, 0.85);
+  color: #a78bfa;
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 5px;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  font-family: system-ui, -apple-system, sans-serif;
+  white-space: nowrap;
+  text-decoration: none !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  z-index: 2147483646;
+}
+
+.hexpose-scan-btn:hover {
+  background: rgba(90, 40, 180, 0.9);
+  border-color: #8b5cf6;
+  transform: scale(1.08);
+}
+
+.hexpose-scan-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Verdict states */
+.hexpose-scan-btn.hexpose-verdict-clean {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.5);
+  background: rgba(4, 40, 25, 0.85);
+}
+
+.hexpose-scan-btn.hexpose-verdict-caution {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.5);
+  background: rgba(40, 30, 4, 0.85);
+}
+
+.hexpose-scan-btn.hexpose-verdict-suspicious {
+  color: #fb923c;
+  border-color: rgba(251, 146, 60, 0.5);
+  background: rgba(40, 15, 4, 0.85);
+}
+
+.hexpose-scan-btn.hexpose-verdict-malicious {
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.6);
+  background: rgba(40, 4, 4, 0.85);
+  animation: hexpose-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes hexpose-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.5); }
+  50%       { box-shadow: 0 0 0 6px rgba(248, 113, 113, 0); }
+}
+
+/* ─── Warning Banner (inline on page) ────────────────────────────────────── */
+
+.hexpose-warning-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 8px 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border-left: 4px solid #fb923c;
+  background: rgba(40, 15, 4, 0.9);
+  color: #fde68a;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  max-width: 600px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  z-index: 2147483645;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.hexpose-warning-banner.hexpose-verdict-malicious {
+  border-left-color: #f87171;
+  background: rgba(55, 10, 10, 0.92);
+  color: #fca5a5;
+}
+
+.hexpose-warning-banner.hexpose-verdict-suspicious {
+  border-left-color: #fb923c;
+  background: rgba(45, 18, 4, 0.92);
+  color: #fed7aa;
+}
+
+.hexpose-banner-icon {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.hexpose-banner-text {
+  flex: 1;
+}
+
+.hexpose-banner-text strong {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.hexpose-banner-text small {
+  opacity: 0.75;
+  font-size: 11px;
+}
+
+.hexpose-banner-findings {
+  margin: 4px 0 0;
+  padding: 4px 8px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: monospace;
+  white-space: pre;
+  color: inherit;
+  opacity: 0.9;
+}
+
+.hexpose-banner-close {
+  background: none;
+  border: none;
+  color: currentColor;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.hexpose-banner-close:hover {
+  opacity: 1;
+}
+
+/* ─── Drop Alert (floating) ───────────────────────────────────────────────── */
+
+.hexpose-drop-alert {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  max-width: 380px !important;
+  z-index: 2147483647 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
+  animation: hexpose-slidein 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes hexpose-slidein {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
